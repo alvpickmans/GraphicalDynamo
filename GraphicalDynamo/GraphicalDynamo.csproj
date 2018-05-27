@@ -5,7 +5,7 @@
     <ProjectGuid>{E0A3078A-F9D7-4CFC-AE3A-640B98963BB0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <NoStandardLibraries>false</NoStandardLibraries>
-    <AssemblyName>ClassLibrary</AssemblyName>
+    <AssemblyName>GraphicalDynamo</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -14,11 +14,12 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Debug 2.x\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\Debug 2.x\GraphicalDynamo.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,6 +32,16 @@
   </PropertyGroup>
   <PropertyGroup>
     <RootNamespace>GraphicalDynamo</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug 2.x|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug 2.x\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>bin\Debug 2.x\GraphicalDynamo.xml</DocumentationFile>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CoreNodeModels, Version=1.3.0.961, Culture=neutral, processorArchitecture=MSIL">
@@ -139,13 +150,10 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\Geometry\Curve.cs" />
-    <Compile Include="src\Geometry\Mesh.cs" />
-    <Compile Include="src\Geometry\MeshToolkit.cs" />
     <Compile Include="src\Geometry\Point.cs" />
     <Compile Include="src\Geometry\Visibility.cs" />
     <Compile Include="src\Geometry\Voxelate.cs" />
     <Compile Include="src\Graphs\DynamoGraph.cs" />
-    <Compile Include="src\Graphs\VisibilityGraph.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="packages\z_GraphicalDynamo\bin\" />
@@ -181,12 +189,12 @@
   </Target>
   <PropertyGroup>
     <PostBuildEvent>
-echo Configuration: $(Configuration)
+echo Configuration: "$(Configuration)"
 
 
 
-if $(Configuration) == Debug goto Dynamo1
-if $(Configuration) == Debug2 goto Dynamo2
+if "$(Configuration)" == "Debug" goto Dynamo1
+if "$(Configuration)" == "Debug 2.x" goto Dynamo2
 
 
 
@@ -232,7 +240,7 @@ xcopy /y /s /e "$(ProjectDir)packages\z_GraphicalDynamo" "%25appdata%25\Dynamo\D
 goto exit
       
 :exit
-    </PostBuildEvent>
+</PostBuildEvent>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio AllowExistingFolder="true" />
