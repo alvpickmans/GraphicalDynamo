@@ -1,0 +1,18 @@
+{
+  "contains_binaries": true,
+  "contents": "Graphical",
+  "dependencies": [ ],
+  "description": "",
+  "engine": "dynamo",
+  "engine_metadata": "",
+  "engine_version": "2.0.1.5055",
+  "file_hash": null,
+  "group": "",
+  "keywords": [ "graphical", "dynamo" ],
+  "license": "",
+  "name": "Graphical",
+  "node_libraries": [ "GraphicalDynamo, Version=0.1.0.0, Culture=neutral, PublicKeyToken=null"],
+  "repository_url": "",
+  "site_url": "",
+  "version": "0.1.0-alpha"
+}
