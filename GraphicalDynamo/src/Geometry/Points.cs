@@ -17,7 +17,7 @@ namespace GraphicalDynamo.Geometry
     /// <summary>
     /// Static class extending Point functionality
     /// </summary>
-    public static class Point
+    public static class Points
     {
         //Vector-plane intersection https://math.stackexchange.com/questions/100439/determine-where-a-vector-will-intersect-a-plane
 
@@ -85,6 +85,13 @@ namespace GraphicalDynamo.Geometry
         internal static DSPoint ToPoint(gVertex vertex)
         {
             return DSPoint.ByCoordinates(vertex.X, vertex.Y, vertex.Z);
+        }
+
+        internal static bool AreEqual(DSPoint point1, DSPoint point2)
+        {
+            return gBase.Threshold(point1.X, point2.X) &&
+                gBase.Threshold(point1.Y, point2.Y) &&
+                gBase.Threshold(point1.Z, point2.Z);
         }
 
         /// <summary>
