@@ -57,6 +57,21 @@ namespace GraphicalDynamo.Graphs
             return lines;
         }
 
+
+        /// <summary>
+        /// Connectivity factors represent the number of connections an edge has 
+        /// on a range from 0 to 1.
+        /// </summary>
+        /// <param name="visGraph">Visibility Graph</param>
+        /// <returns name="factors">Connectivity factors by edge on graph</returns>
+        [NodeCategory("Query")]
+        public static List<double> ConnectivityFactors(Graph visGraph)
+        {
+            if (!visGraph.IsVisibilityGraph) { throw new ArgumentException("Needs to be visibility graph","visGraph"); }
+            VisibilityGraph vGraph = visGraph.graph as VisibilityGraph;
+            return vGraph.ConnectivityFactor();
+        }
+
         #endregion
 
         #region Internal Constructors
@@ -89,12 +104,12 @@ namespace GraphicalDynamo.Graphs
         }
 
         /// <summary>
-        /// Creates a Graph by a set of boundaries and internals polygons.
+        /// Creates a Graph by a set of boundary and internal polygons.
         /// </summary>
         /// <param name="boundaries">Boundary polygons</param>
         /// <param name="internals">Internal polygons</param>
         /// <returns name="graph">Base graph</returns>
-        public static Graph ByBoundariesAndInternalaPolygons(List<Polygon> boundaries, [DefaultArgument("[]")]List<Polygon> internals)
+        public static Graph ByBoundaryAndInternalPolygons(List<Polygon> boundaries, [DefaultArgument("[]")]List<Polygon> internals)
         {
             if(boundaries == null) { throw new NullReferenceException("boundaryPolygons"); }
             if(internals == null) { throw new NullReferenceException("internalPolygons"); }
