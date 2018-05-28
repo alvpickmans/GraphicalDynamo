@@ -13,6 +13,8 @@ using Graphical.Geometry;
 using Graphical.Graphs;
 using Dynamo.Graph.Nodes;
 using GraphicalDynamo.Geometry;
+using Graphical.Core;
+using System.Drawing;
 #endregion
 
 namespace GraphicalDynamo.Graphs
@@ -26,6 +28,12 @@ namespace GraphicalDynamo.Graphs
     {
         #region Internal Properties
         internal Graphical.Graphs.Graph graph { get; private set; }
+        internal DSCore.Color edgeDefaultColour = DSCore.Color.ByARGB(150, 200, 255, 255);
+        internal DSCore.Color vertexDefaultColour = DSCore.Color.ByARGB(255, 0, 0, 255);
+
+        internal Dictionary<double, DSCore.Color> colorRange { get; set; }
+
+        internal List<double> Factors { get; set; }
         #endregion
 
         #region Public Properties
@@ -63,13 +71,41 @@ namespace GraphicalDynamo.Graphs
         /// on a range from 0 to 1.
         /// </summary>
         /// <param name="visGraph">Visibility Graph</param>
+        /// <returns name="visGraph">Visibility Graph</returns>
         /// <returns name="factors">Connectivity factors by edge on graph</returns>
         [NodeCategory("Query")]
-        public static List<double> ConnectivityFactors(Graph visGraph)
+        [MultiReturn(new[] { "visGraph", "factors" })]
+        public static Dictionary<string, object> ConnectivityFactors(Graph visGraph, 
+            [DefaultArgument("null")]List<DSCore.Color> colors, 
+            [DefaultArgument("null")]List<double> indices)
         {
             if (!visGraph.IsVisibilityGraph) { throw new ArgumentException("Needs to be visibility graph","visGraph"); }
             VisibilityGraph vGraph = visGraph.graph as VisibilityGraph;
-            return vGraph.ConnectivityFactor();
+
+            Graph graph = new Graph()
+            {
+                graph = vGraph,
+                Factors = vGraph.ConnectivityFactor()
+            };
+
+            if(colors != null && indices != null && colors.Count == indices.Count)
+            {
+                graph.colorRange = new Dictionary<double, DSCore.Color>();
+                // Create KeyValuePairs and sort them by index in case unordered.
+                var pairs = indices.Zip(colors, (i, c) => new KeyValuePair<double, DSCore.Color>(i, c)).OrderBy(kv => kv.Key);
+
+                // Adding values to colorRange dictionary
+                foreach(KeyValuePair<double, DSCore.Color> kv in pairs)
+                {
+                    graph.colorRange.Add(kv.Key, kv.Value);
+                }
+            }
+
+            return new Dictionary<string, object>()
+            {
+                {"visGraph", graph },
+                {"factors", graph.Factors }
+            };
         }
 
         #endregion
@@ -261,18 +297,71 @@ namespace GraphicalDynamo.Graphs
                 package.AddPointVertex(v.X, v.Y, v.Z);
                 package.AddPointVertexColor(255, 0, 0, 255);
             }
-            foreach (gEdge e in graph.edges)
+
+            // There are factorsto represent
+            if (this.Factors != null && colorRange != null)
             {
-                package.AddLineStripVertex(e.StartVertex.X, e.StartVertex.Y, e.StartVertex.Z);
-                package.AddLineStripVertex(e.EndVertex.X, e.EndVertex.Y, e.EndVertex.Z);
-                /*Colour addition can be done iteratively with a for loop,
-                 * but for just two elements might be better to save the overhead
-                 * variable declaration and all.
-                 */
-                package.AddLineStripVertexColor(150, 200, 255, 255);
-                package.AddLineStripVertexColor(150, 200, 255, 255);
+                package.RequiresPerVertexColoration = true;
+                var rangeColors = colorRange.Values.ToList();
+                for (var i = 0; i < graph.edges.Count; i++)
+                {
+                    var e = graph.edges[i];
+                    var factor = Factors[i];
+                    DSCore.Color color;
+
+                    if (factor <= colorRange.First().Key)
+                    {
+                       color = colorRange.First().Value;
+                    }
+                    else if(factor >= colorRange.Last().Key)
+                    {
+                       color = colorRange.Last().Value;
+                    }
+                    else
+                    {
+                        int index = List.BisectIndex(colorRange.Keys.ToList(), factor);
+                        
+                        color = DSCore.Color.Lerp(rangeColors[index-1], rangeColors[index], Factors[i]);
+                    }
+                    
+
+                    AddColouredEdge(package, e, color);
+                }
             }
+            else
+            {
+
+                foreach (gEdge e in graph.edges)
+                {
+                    AddColouredEdge(package, e, edgeDefaultColour);
+                }
+            }
+
         } 
+
+        internal static byte[] CreateColorByteArrayByColours(List<DSCore.Color> colors)
+        {
+            byte[] arr = new byte[colors.Count * 4];
+            for(var i = 0; i < colors.Count; i++)
+            {
+                arr[i * 4] = colors[i].Red;
+                arr[i * 4 + 1] = colors[i].Green;
+                arr[i * 4 + 2] = colors[i].Blue;
+                arr[i * 4 + 2] = colors[i].Alpha; 
+            }
+            return arr;
+        }
+
+        internal static void AddColouredEdge(IRenderPackage package, gEdge edge, DSCore.Color color)
+        {
+            package.AddLineStripVertex(edge.StartVertex.X, edge.StartVertex.Y, edge.StartVertex.Z);
+            package.AddLineStripVertex(edge.EndVertex.X, edge.EndVertex.Y, edge.EndVertex.Z);
+
+            package.AddLineStripVertexColor(color.Red, color.Green, color.Blue, color.Alpha);
+            package.AddLineStripVertexColor(color.Red, color.Green, color.Blue, color.Alpha);
+
+            package.AddLineStripVertexCount(2);
+        }
         #endregion
     }
 }
