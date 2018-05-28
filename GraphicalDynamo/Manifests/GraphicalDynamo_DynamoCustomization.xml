@@ -8,7 +8,7 @@
       <category>Graphical.Geometry</category>
     </namespace>
     <namespace name="GraphicalDynamo.Graphs">
-      <category>Graphical</category>
+      <category>Graphical.Graphs</category>
     </namespace>
   </namespaces>
 </doc>

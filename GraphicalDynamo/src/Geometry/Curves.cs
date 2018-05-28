@@ -103,7 +103,7 @@ namespace GraphicalDynamo.Geometry
             if (lines == null) { throw new ArgumentNullException("lines"); }
             if (lines.Count < 2) { throw new ArgumentException("Needs 2 or more lines", "lines"); }
 
-            Graph g = Graph.ByLines(lines);
+            BaseGraph g = BaseGraph.ByLines(lines);
             g.graph.BuildPolygons();
 
             var gPolygons = g.graph.Polygons;
