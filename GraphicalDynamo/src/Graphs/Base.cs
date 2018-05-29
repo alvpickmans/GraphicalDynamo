@@ -13,6 +13,8 @@ using Graphical.Geometry;
 using Graphical.Graphs;
 using Dynamo.Graph.Nodes;
 using GraphicalDynamo.Geometry;
+using Graphical.Core;
+using System.Drawing;
 #endregion
 
 namespace GraphicalDynamo.Graphs
@@ -20,24 +22,27 @@ namespace GraphicalDynamo.Graphs
     
     /// <summary>
     /// Representation of a Graph.
-    /// Graph contains a Dictionary where
     /// </summary>
-    public class Graph : IGraphicItem
+    public class BaseGraph : IGraphicItem
     {
         #region Internal Properties
-        internal Graphical.Graphs.Graph graph { get; private set; }
+        internal Graphical.Graphs.Graph graph { get; set; }
+        internal DSCore.Color edgeDefaultColour = DSCore.Color.ByARGB(255, 150, 200, 255);
+        internal DSCore.Color vertexDefaultColour = DSCore.Color.ByARGB(255, 75, 125, 180);
+
         #endregion
 
         #region Public Properties
+
         /// <summary>
         /// Checks if the input is a Visibility or Base graph.
         /// </summary>
-        public bool IsVisibilityGraph
+        /// <param name="graph">Graph</param>
+        /// <returns></returns>
+        [NodeCategory("Query")]
+        public static bool IsVisibilityGraph(BaseGraph graph)
         {
-            get
-            {
-                return graph.GetType() == typeof(Graphical.Graphs.VisibilityGraph);
-            }
+            return graph.GetType() == typeof(Graphical.Graphs.VisibilityGraph);
         }
 
         /// <summary>
@@ -60,9 +65,9 @@ namespace GraphicalDynamo.Graphs
         #endregion
 
         #region Internal Constructors
-        internal Graph() { }
+        internal BaseGraph() { }
 
-        internal Graph(List<gPolygon> gPolygons)
+        internal BaseGraph(List<gPolygon> gPolygons)
         {
             graph = new Graphical.Graphs.Graph(gPolygons);
         }
@@ -73,8 +78,8 @@ namespace GraphicalDynamo.Graphs
         /// Creates a graph by a set of closed polygons
         /// </summary>
         /// <param name="polygons">Polygons</param>
-        /// <returns name="graph">Base graph</returns>
-        public static Graph ByPolygons(List<Polygon> polygons)
+        /// <returns name="baseGraph">Base graph</returns>
+        public static BaseGraph ByPolygons(List<Polygon> polygons)
         {
             if (polygons == null) { throw new NullReferenceException("polygons"); }
             List<gPolygon> input = new List<gPolygon>();
@@ -85,16 +90,16 @@ namespace GraphicalDynamo.Graphs
                 input.Add(gPol);
             }
 
-            return new Graph(input);
+            return new BaseGraph(input);
         }
 
         /// <summary>
-        /// Creates a Graph by a set of boundaries and internals polygons.
+        /// Creates a Graph by a set of boundary and internal polygons.
         /// </summary>
         /// <param name="boundaries">Boundary polygons</param>
         /// <param name="internals">Internal polygons</param>
-        /// <returns name="graph">Base graph</returns>
-        public static Graph ByBoundariesAndInternalaPolygons(List<Polygon> boundaries, [DefaultArgument("[]")]List<Polygon> internals)
+        /// <returns name="baseGraph">Base graph</returns>
+        public static BaseGraph ByBoundaryAndInternalPolygons(List<Polygon> boundaries, [DefaultArgument("[]")]List<Polygon> internals)
         {
             if(boundaries == null) { throw new NullReferenceException("boundaryPolygons"); }
             if(internals == null) { throw new NullReferenceException("internalPolygons"); }
@@ -113,18 +118,18 @@ namespace GraphicalDynamo.Graphs
                 input.Add(gPol);
             }
 
-            return new Graph(input);
+            return new BaseGraph(input);
         }
         
         /// <summary>
         /// Creates a new Graph by a set of lines.
         /// </summary>
         /// <param name="lines">Lines</param>
-        /// <returns name="graph">Base Graph</returns>
-        public static Graph ByLines(List<Line> lines)
+        /// <returns name="baseGraph">Base Graph</returns>
+        public static BaseGraph ByLines(List<Line> lines)
         {
             if(lines == null) { throw new NullReferenceException("lines"); }
-            Graph g = new Graph()
+            BaseGraph g = new BaseGraph()
             {
                 graph = new Graphical.Graphs.Graph()
             };
@@ -141,61 +146,6 @@ namespace GraphicalDynamo.Graphs
         #endregion
 
         #region Public Methods
-        /// <summary>
-        /// Computes the Visibility Graph from a base graph using Lee's algorithm.
-        /// </summary>
-        /// <param name="graph">Base graph</param>
-        /// <param name="reducedGraph">Reduced graph returns edges where its vertices belong to different 
-        /// polygons and at least one is not convex/concave to its polygon.</param>
-        /// <returns name="visGraph">Visibility graph</returns>
-        [NodeCategory("Actions")]
-        public static Graph VisibilityGraph(Graph graph, bool reducedGraph = true)
-        {
-            if(graph == null) { throw new ArgumentNullException("graph"); }
-            var visGraph = new VisibilityGraph(graph.graph, reducedGraph, true);
-
-            var baseGraph = new Graph()
-            {
-                graph = visGraph
-            };
-
-            return baseGraph;
-
-        }
-
-        /// <summary>
-        /// Returns a graph representing the shortest path 
-        /// between two points on a given Visibility Graph.
-        /// </summary>
-        /// <param name="visGraph">Visibility Graph</param>
-        /// <param name="origin">Origin point</param>
-        /// <param name="destination">Destination point</param>
-        /// <returns name="graph">Graph representing the shortest path</returns>
-        /// <returns name="length">Length of path</returns>
-        [MultiReturn(new[] { "graph", "length" })]
-        public static Dictionary<string, object> ShortestPath(Graph visGraph, DSPoint origin, DSPoint destination)
-        {
-            if (visGraph == null) { throw new ArgumentNullException("visGraph"); }
-            if (origin == null) { throw new ArgumentNullException("origin"); }
-            if (destination == null) { throw new ArgumentNullException("destination"); }
-
-            //Graphical.Graphs.Graph internalGraph = visibilityGraph.graph;
-            gVertex gOrigin = gVertex.ByCoordinates(origin.X, origin.Y, origin.Z);
-            gVertex gDestination = gVertex.ByCoordinates(destination.X, destination.Y, destination.Z);
-
-            if (!visGraph.IsVisibilityGraph) { throw new ArgumentException("Input should be a Visibility Graph", "visibilityGraph"); }
-            
-            VisibilityGraph vGraph = visGraph.graph as Graphical.Graphs.VisibilityGraph;
-            var shortest = Graphical.Graphs.VisibilityGraph.ShortestPath(vGraph, gOrigin, gDestination);
-            Graph resultGraph = new Graph();
-            resultGraph.graph = shortest;
-            return new Dictionary<string, object>()
-            {
-                {"graph", resultGraph },
-                {"length", shortest.edges.Select(e => e.Length).Sum() }
-            };
-        }
-
 
         /// <summary>
         /// Returns a Graph representing all the vertices on 
@@ -205,15 +155,14 @@ namespace GraphicalDynamo.Graphs
         /// <param name="point">Origin point</param>
         /// <returns name="graph">Graph representing the vertex visibility</returns>
         [NodeCategory("Actions")]
-        public static Graph VertexVisibility(Graph graph, DSPoint point)
+        public static BaseGraph VertexVisibility(BaseGraph graph, DSPoint point)
         {
             if (graph == null) { throw new ArgumentNullException("graph"); }
-            if (graph.IsVisibilityGraph) { throw new ArgumentException("Input cannot be a Visibility Graph"); }
             if (point == null) { throw new ArgumentNullException("point"); }
 
             gVertex origin = gVertex.ByCoordinates(point.X, point.Y, point.Z);
 
-            Graph g = new Graph()
+            BaseGraph g = new BaseGraph()
             {
                 graph = Graphical.Graphs.VisibilityGraph.VertexVisibility(origin, graph.graph, false, false)
             };
@@ -241,23 +190,55 @@ namespace GraphicalDynamo.Graphs
         [IsVisibleInDynamoLibrary(false)]
         public void Tessellate(IRenderPackage package, TessellationParameters parameters)
         {
+            if (this.GetType() == typeof(VisibilityGraph))
+            {
+                VisibilityGraph visGraph = this as VisibilityGraph;
+                if(visGraph.Factors != null && visGraph.colorRange != null)
+                {
+                    visGraph.TessellateVisibilityGraph(package, parameters);
+                }
+                else
+                {
+                    TesselateBaseGraph(package, parameters);
+                }
+            }
+            else
+            {
+                TesselateBaseGraph(package, parameters);
+            }
+            
+
+        }
+
+        internal void TesselateBaseGraph(IRenderPackage package, TessellationParameters parameters)
+        {
             foreach (gVertex v in graph.vertices)
             {
-                package.AddPointVertex(v.X, v.Y, v.Z);
-                package.AddPointVertexColor(255, 0, 0, 255);
+                AddColouredVertex(package, v, vertexDefaultColour);
             }
+
             foreach (gEdge e in graph.edges)
             {
-                package.AddLineStripVertex(e.StartVertex.X, e.StartVertex.Y, e.StartVertex.Z);
-                package.AddLineStripVertex(e.EndVertex.X, e.EndVertex.Y, e.EndVertex.Z);
-                /*Colour addition can be done iteratively with a for loop,
-                 * but for just two elements might be better to save the overhead
-                 * variable declaration and all.
-                 */
-                package.AddLineStripVertexColor(150, 200, 255, 255);
-                package.AddLineStripVertexColor(150, 200, 255, 255);
+                AddColouredEdge(package, e, edgeDefaultColour);
             }
-        } 
+        }
+
+        internal static void AddColouredVertex(IRenderPackage package, gVertex vertex, DSCore.Color color)
+        {
+            package.AddPointVertex(vertex.X, vertex.Y, vertex.Z);
+            package.AddPointVertexColor(color.Red, color.Green, color.Blue, color.Alpha);
+        }
+
+        internal static void AddColouredEdge(IRenderPackage package, gEdge edge, DSCore.Color color)
+        {
+            package.AddLineStripVertex(edge.StartVertex.X, edge.StartVertex.Y, edge.StartVertex.Z);
+            package.AddLineStripVertex(edge.EndVertex.X, edge.EndVertex.Y, edge.EndVertex.Z);
+
+            package.AddLineStripVertexColor(color.Red, color.Green, color.Blue, color.Alpha);
+            package.AddLineStripVertexColor(color.Red, color.Green, color.Blue, color.Alpha);
+
+            package.AddLineStripVertexCount(2);
+        }
         #endregion
     }
 }

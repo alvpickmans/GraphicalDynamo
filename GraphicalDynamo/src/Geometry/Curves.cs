@@ -91,7 +91,7 @@ namespace GraphicalDynamo.Geometry
         #region Public Methods
 
         /// <summary>
-        /// Creates polygons from a list of connected lines. Lines are returned as ungrouped if not connected or they 
+        /// Creates polygons from a list of lines. Lines are returned as ungrouped if not connected or
         /// not forming a closed polygon.
         /// </summary>
         /// <param name="lines">List of connected lines</param>
@@ -103,7 +103,7 @@ namespace GraphicalDynamo.Geometry
             if (lines == null) { throw new ArgumentNullException("lines"); }
             if (lines.Count < 2) { throw new ArgumentException("Needs 2 or more lines", "lines"); }
 
-            Graph g = Graph.ByLines(lines);
+            BaseGraph g = BaseGraph.ByLines(lines);
             g.graph.BuildPolygons();
 
             var gPolygons = g.graph.Polygons;
@@ -163,7 +163,7 @@ namespace GraphicalDynamo.Geometry
                 // If already belongs to a polygon or is not a polygon vertex or already computed
                 if (vertices.ContainsKey(v)|| graph[v].Count > 2) { continue; }
 
-                //computedVertices.Add(v);
+                // grouped.Count() translates to the number of different groups created
                 vertices.Add(v, grouped.Count());
                 grouped.Add(vertices[v], new List<DSCurve>());
 
@@ -173,14 +173,15 @@ namespace GraphicalDynamo.Geometry
                     var endVertex = Points.ToVertex(curve.EndPoint);
                     DSCurve nextCurve = curve;
                     gVertex nextVertex = (startVertex.Equals(v)) ? endVertex : startVertex;
-                    //while(vertices[nextVertex] != vertices[v])
+                
                     while(!vertices.ContainsKey(nextVertex))
                     {
-                        //computedVertices.Add(nextVertex);
                         vertices.Add(nextVertex, vertices[v]);
                         grouped[vertices[v]].Add(nextCurve);
 
+                        // Next vertex doesn't have any other curve connected.
                         if(graph[nextVertex].Count < 2) { break; }
+
                         nextCurve = graph[nextVertex].Where(c => !c.Equals(nextCurve)).First();
                         startVertex = Points.ToVertex(nextCurve.StartPoint);
                         endVertex = Points.ToVertex(nextCurve.EndPoint);
