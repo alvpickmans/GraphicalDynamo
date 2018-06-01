@@ -1,4 +1,5 @@
-﻿<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -14,12 +15,12 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug 2.x\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>bin\Debug 2.x\GraphicalDynamo.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\GraphicalDynamo.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -159,7 +160,7 @@
   <ItemGroup>
     <None Include="Manifests\pkg.json" />
     <None Include="packages.config" />
-    <None Include="packages\z_GraphicalDynamo\pkg.json" />
+    <None Include="packages\Graphical\pkg.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Manifests\GraphicalDynamo_DynamoCustomization.xml" />
@@ -172,9 +173,9 @@
     <Compile Include="src\Graphs\Base.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="packages\z_GraphicalDynamo\bin\" />
-    <Folder Include="packages\z_GraphicalDynamo\dyf\" />
-    <Folder Include="packages\z_GraphicalDynamo\extra\" />
+    <Folder Include="packages\Graphical\bin\" />
+    <Folder Include="packages\Graphical\dyf\" />
+    <Folder Include="packages\Graphical\extra\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Graphical\Graphical\Graphical.csproj">
@@ -195,68 +196,68 @@
       <ToDelete Include="$(ProjectDir)packages\z_$(SolutionName)\bin\**" />
     </ItemGroup>
     <Delete Files="@(ToDelete)" />
-    <Copy SourceFiles="@(Dlls)" DestinationFolder="$(ProjectDir)packages\z_$(SolutionName)\bin\" />
-    <Copy SourceFiles="@(Pdbs)" DestinationFolder="$(ProjectDir)packages\z_$(SolutionName)\bin\" />
-    <Copy SourceFiles="@(Xmls)" DestinationFolder="$(ProjectDir)packages\z_$(SolutionName)\bin\" />
-    <Copy SourceFiles="@(Configs)" DestinationFolder="$(ProjectDir)packages\z_$(SolutionName)\bin\" />
-    <Copy SourceFiles="@(JSON)" DestinationFolder="$(ProjectDir)packages\z_$(SolutionName)" />
-    <MakeDir Directories="$(ProjectDir)packages\z_$(SolutionName)\dyf" />
-    <MakeDir Directories="$(ProjectDir)packages\z_$(SolutionName)\extra" />
+    <Copy SourceFiles="@(Dlls)" DestinationFolder="$(ProjectDir)packages\Graphical\bin\" />
+    <Copy SourceFiles="@(Pdbs)" DestinationFolder="$(ProjectDir)packages\Graphical\bin\" />
+    <Copy SourceFiles="@(Xmls)" DestinationFolder="$(ProjectDir)packages\Graphical)\bin\" />
+    <Copy SourceFiles="@(Configs)" DestinationFolder="$(ProjectDir)packages\Graphical\bin\" />
+    <Copy SourceFiles="@(JSON)" DestinationFolder="$(ProjectDir)packages\Graphical" />
+    <MakeDir Directories="$(ProjectDir)packages\Graphical\dyf" />
+    <MakeDir Directories="$(ProjectDir)packages\Graphical\extra" />
   </Target>
   <PropertyGroup>
     <PostBuildEvent>
-echo Configuration: "$(Configuration)"
+      echo Configuration: "$(Configuration)"
 
 
 
-if "$(Configuration)" == "Debug" goto Dynamo1
-if "$(Configuration)" == "Debug 2.x" goto Dynamo2
+      if "$(Configuration)" == "Debug" goto Dynamo1
+      if "$(Configuration)" == "Debug 2.x" goto Dynamo2
 
 
 
-:Dynamo1
+      :Dynamo1
 
 
-echo Copying to Dynamo Core 1.3
+      echo Copying to Dynamo Core 1.3
 
-if not exist "%25appdata%25\Dynamo\Dynamo Core\1.3\packages\z_GraphicalDynamo" mkdir "%25appdata%25\Dynamo\Dynamo Core\1.3\packages\z_GraphicalDynamo"
+      if not exist "%25appdata%25\Dynamo\Dynamo Core\1.3\packages\Graphical" mkdir "%25appdata%25\Dynamo\Dynamo Core\1.3\packages\Graphical"
 
-del /s /q "%25appdata%25\Dynamo\Dynamo Core\1.3\packages\z_GraphicalDynamo\"
-xcopy /y /s /e "$(ProjectDir)packages\z_GraphicalDynamo" "%25appdata%25\Dynamo\Dynamo Core\1.3\packages\z_GraphicalDynamo"
-
-
-echo Copying to Dynamo Revit 1.3
-
-if not exist "%25appdata%25\Dynamo\Dynamo Revit\1.3\packages\z_GraphicalDynamo" mkdir "%25appdata%25\Dynamo\Dynamo Revit\1.3\packages\z_GraphicalDynamo"
-
-del /s /q "%25appdata%25\Dynamo\Dynamo Revit\1.3\packages\z_GraphicalDynamo\"
-xcopy /y /s /e "$(ProjectDir)packages\z_GraphicalDynamo" "%25appdata%25\Dynamo\Dynamo Revit\1.3\packages\z_GraphicalDynamo"
-
-goto exit
+      del /s /q "%25appdata%25\Dynamo\Dynamo Core\1.3\packages\Graphical\"
+      xcopy /y /s /e "$(ProjectDir)packages\Graphical" "%25appdata%25\Dynamo\Dynamo Core\1.3\packages\Graphical"
 
 
-:Dynamo2
+      echo Copying to Dynamo Revit 1.3
+
+      if not exist "%25appdata%25\Dynamo\Dynamo Revit\1.3\packages\Graphical" mkdir "%25appdata%25\Dynamo\Dynamo Revit\1.3\packages\Graphical"
+
+      del /s /q "%25appdata%25\Dynamo\Dynamo Revit\1.3\packages\Graphical\"
+      xcopy /y /s /e "$(ProjectDir)packages\Graphical" "%25appdata%25\Dynamo\Dynamo Revit\1.3\packages\Graphical"
+
+      goto exit
 
 
-echo Copying to Dynamo Core 2
-
-if not exist "%25appdata%25\Dynamo\Dynamo Core\2.0\packages\z_GraphicalDynamo" mkdir "%25appdata%25\Dynamo\Dynamo Core\2.0\packages\z_GraphicalDynamo"
-
-del /s /q "%25appdata%25\Dynamo\Dynamo Core\2.0\packages\z_GraphicalDynamo\"
-xcopy /y /s /e "$(ProjectDir)packages\z_GraphicalDynamo" "%25appdata%25\Dynamo\Dynamo Core\2.0\packages\z_GraphicalDynamo"
+      :Dynamo2
 
 
-echo Copying to Dynamo Revit 2
+      echo Copying to Dynamo Core 2
 
-if not exist "%25appdata%25\Dynamo\Dynamo Revit\2.0\packages\z_GraphicalDynamo" mkdir "%25appdata%25\Dynamo\Dynamo Revit\2.0\packages\z_GraphicalDynamo"
+      if not exist "%25appdata%25\Dynamo\Dynamo Core\2.0\packages\Graphical" mkdir "%25appdata%25\Dynamo\Dynamo Core\2.0\packages\Graphical"
 
-del /s /q "%25appdata%25\Dynamo\Dynamo Revit\2.0\packages\z_GraphicalDynamo\"
-xcopy /y /s /e "$(ProjectDir)packages\z_GraphicalDynamo" "%25appdata%25\Dynamo\Dynamo Revit\2.0\packages\z_GraphicalDynamo"
+      del /s /q "%25appdata%25\Dynamo\Dynamo Core\2.0\packages\Graphical\"
+      xcopy /y /s /e "$(ProjectDir)packages\Graphical" "%25appdata%25\Dynamo\Dynamo Core\2.0\packages\Graphical"
 
-goto exit
-      
-:exit
-</PostBuildEvent>
+
+      echo Copying to Dynamo Revit 2
+
+      if not exist "%25appdata%25\Dynamo\Dynamo Revit\2.0\packages\Graphical" mkdir "%25appdata%25\Dynamo\Dynamo Revit\2.0\packages\Graphical"
+
+      del /s /q "%25appdata%25\Dynamo\Dynamo Revit\2.0\packages\Graphical\"
+      xcopy /y /s /e "$(ProjectDir)packages\Graphical" "%25appdata%25\Dynamo\Dynamo Revit\2.0\packages\Graphical"
+
+      goto exit
+
+      :exit
+    </PostBuildEvent>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio AllowExistingFolder="true" />
