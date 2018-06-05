@@ -198,7 +198,7 @@
     <Delete Files="@(ToDelete)" />
     <Copy SourceFiles="@(Dlls)" DestinationFolder="$(ProjectDir)packages\Graphical\bin\" />
     <Copy SourceFiles="@(Pdbs)" DestinationFolder="$(ProjectDir)packages\Graphical\bin\" />
-    <Copy SourceFiles="@(Xmls)" DestinationFolder="$(ProjectDir)packages\Graphical)\bin\" />
+    <Copy SourceFiles="@(Xmls)" DestinationFolder="$(ProjectDir)packages\Graphical\bin\" />
     <Copy SourceFiles="@(Configs)" DestinationFolder="$(ProjectDir)packages\Graphical\bin\" />
     <Copy SourceFiles="@(JSON)" DestinationFolder="$(ProjectDir)packages\Graphical" />
     <MakeDir Directories="$(ProjectDir)packages\Graphical\dyf" />

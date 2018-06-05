@@ -21,6 +21,11 @@ namespace GraphicalDynamo.Geometry
     {
         #region Internal Methods
 
+        internal static gEdge ToEdge(this Line line)
+        {
+            return gEdge.ByStartVertexEndVertex(line.StartPoint.ToVertex(), line.EndPoint.ToVertex());
+        }
+
         internal static Dictionary<gVertex,List<DSCurve>> CurvesDependency(List<DSCurve> curves)
         {
             Dictionary<gVertex, List<DSCurve>> graph = new Dictionary<gVertex, List<DSCurve>>();

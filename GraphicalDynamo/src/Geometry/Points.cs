@@ -80,12 +80,12 @@ namespace GraphicalDynamo.Geometry
         #endregion
 
         #region Internal Methods
-        internal static gVertex ToVertex(DSPoint point)
+        internal static gVertex ToVertex(this DSPoint point)
         {
             return gVertex.ByCoordinates(point.X, point.Y, point.Z);
         }
 
-        internal static DSPoint ToPoint(gVertex vertex)
+        internal static DSPoint ToPoint(this gVertex vertex)
         {
             return DSPoint.ByCoordinates(vertex.X, vertex.Y, vertex.Z);
         }

@@ -72,6 +72,28 @@ namespace GraphicalDynamo.Graphs
         #region Public Methods
 
         /// <summary>
+        /// Merges a set of Visibility Graphs by connecting them through intersecting lines.
+        /// In order to work better, lines end points should intersect VG polygon's edges.
+        /// </summary>
+        /// <param name="visibilityGraphs"></param>
+        /// <param name="lines">Connecting lines</param>
+        /// <returns name="visGraph">Connected VisibilityGraph</returns>
+        public static VisibilityGraph ConnectGraphs(List<VisibilityGraph> visibilityGraphs, List<Line> lines)
+        {
+            if(visibilityGraphs == null) { throw new ArgumentNullException("visibilityGraphs"); }
+
+            List<Graphical.Graphs.VisibilityGraph> visGraphs = visibilityGraphs.Select(vg => (Graphical.Graphs.VisibilityGraph)vg.graph).ToList();
+            Graphical.Graphs.VisibilityGraph mergedGraph = Graphical.Graphs.VisibilityGraph.Merge(visGraphs);
+
+            var edges = lines.Select(l => l.ToEdge()).ToList();
+
+            return new VisibilityGraph()
+            {
+                graph = Graphical.Graphs.VisibilityGraph.AddEdges(mergedGraph, edges)
+            };
+        }
+
+        /// <summary>
         /// Returns a graph representing the shortest path 
         /// between two points on a given Visibility Graph.
         /// </summary>
