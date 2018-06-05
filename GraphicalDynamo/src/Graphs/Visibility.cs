@@ -78,6 +78,7 @@ namespace GraphicalDynamo.Graphs
         /// <param name="visibilityGraphs"></param>
         /// <param name="lines">Connecting lines</param>
         /// <returns name="visGraph">Connected VisibilityGraph</returns>
+        [NodeCategory("Actions")]
         public static VisibilityGraph ConnectGraphs(List<VisibilityGraph> visibilityGraphs, List<Line> lines)
         {
             if(visibilityGraphs == null) { throw new ArgumentNullException("visibilityGraphs"); }
