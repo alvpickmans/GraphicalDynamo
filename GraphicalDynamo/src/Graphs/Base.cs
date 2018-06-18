@@ -148,26 +148,37 @@ namespace GraphicalDynamo.Graphs
         #region Public Methods
 
         /// <summary>
-        /// Returns a Graph representing all the vertices on 
-        /// a Graph that are visibles from a given point.
+        /// Returns a surface representing the Isovist area visible from 
+        /// the given point.
         /// </summary>
-        /// <param name="graph">Base Graph</param>
+        /// <param name="baseGraph">Base Graph</param>
         /// <param name="point">Origin point</param>
-        /// <returns name="graph">Graph representing the vertex visibility</returns>
+        /// <returns name="isovist">Surface representing the isovist area</returns>
         [NodeCategory("Actions")]
-        public static BaseGraph VertexVisibility(BaseGraph graph, DSPoint point)
+        public static Surface IsovistFromPoint(BaseGraph baseGraph, DSPoint point)
         {
-            if (graph == null) { throw new ArgumentNullException("graph"); }
+            if (baseGraph == null) { throw new ArgumentNullException("graph"); }
             if (point == null) { throw new ArgumentNullException("point"); }
 
             gVertex origin = gVertex.ByCoordinates(point.X, point.Y, point.Z);
 
-            BaseGraph g = new BaseGraph()
+            List<gVertex> vertices = Graphical.Graphs.VisibilityGraph.VertexVisibility(origin, baseGraph.graph);
+            List<DSPoint> points = vertices.Select(v => Points.ToPoint(v)).ToList();
+            Surface isovist;
+            // TODO: Implement better way of checking if polygon is self intersectingç
+            try
             {
-                graph = Graphical.Graphs.VisibilityGraph.VertexVisibility(origin, graph.graph, false, false)
-            };
+                var polygon = Polygon.ByPoints(points);
+                isovist = Surface.ByPatch(polygon);
+            }
+            catch
+            {
+                points.Add(point);
+                var polygon = Polygon.ByPoints(points);
+                isovist = Surface.ByPatch(polygon);
+            }
 
-            return g;
+            return isovist;
         }
 
         #endregion
