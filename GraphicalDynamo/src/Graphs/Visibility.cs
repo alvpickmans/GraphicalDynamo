@@ -13,7 +13,7 @@ using Graphical.Geometry;
 using Graphical.Graphs;
 using Dynamo.Graph.Nodes;
 using GraphicalDynamo.Geometry;
-using Graphical.Core;
+using Graphical.Extensions;
 using System.Drawing;
 #endregion
 
@@ -209,7 +209,7 @@ namespace GraphicalDynamo.Graphs
                 }
                 else
                 {
-                    int index = List.BisectIndex(colorRange.Keys.ToList(), factor);
+                    int index = colorRange.Keys.ToList().BisectIndex(factor);
                         
                     color = DSCore.Color.Lerp(rangeColors[index - 1], rangeColors[index], Factors[i]);
                 }
