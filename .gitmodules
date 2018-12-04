@@ -1,3 +1,4 @@
 [submodule "Graphical"]
 	path = Graphical
 	url = https://github.com/alvpickmans/Graphical
+	branch = dev
