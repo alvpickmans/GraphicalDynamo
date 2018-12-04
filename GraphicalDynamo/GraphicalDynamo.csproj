@@ -196,6 +196,7 @@
     <ProjectReference Include="..\Graphical\Graphical\Graphical.csproj">
       <Project>{428c4b56-65ea-4ad0-8b77-fca52448520a}</Project>
       <Name>Graphical</Name>
+      <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
@@ -216,7 +217,7 @@
     <Copy SourceFiles="@(JSON)" DestinationFolder="$(ProjectDir)packages\Graphical" />
     <MakeDir Directories="$(ProjectDir)packages\Graphical\dyf" />
     <MakeDir Directories="$(ProjectDir)packages\Graphical\extra" />
-    <CallTarget Condition="'$(Configuration)' == 'Debug'" Targets="PackageDeploy" />
+    <CallTarget Condition="'$(Configuration)' != 'Release'" Targets="PackageDeploy" />
   </Target>
   <Target Name="PackageDeploy">
     <ItemGroup>
@@ -229,10 +230,10 @@
       <DynamoRevit2>$(AppData)\Dynamo\Dynamo Revit\2.0\packages</DynamoRevit2>
     </PropertyGroup>
     <!--Copying to Package Folder-->
-    <Copy SourceFiles="@(SourcePackage)" Condition="Exists($(DynamoCore13))" DestinationFolder="$(DynamoCore13)\Graphical\%(RecursiveDir)" />
-    <Copy SourceFiles="@(SourcePackage)" Condition="Exists($(DynamoRevit13))" DestinationFolder="$(DynamoRevit13)\Graphical\%(RecursiveDir)" />
-    <Copy SourceFiles="@(SourcePackage)" Condition="Exists($(DynamoCore2))" DestinationFolder="$(DynamoCore2)\Graphical\%(RecursiveDir)" />
-    <Copy SourceFiles="@(SourcePackage)" Condition="Exists($(DynamoRevit2))" DestinationFolder="$(DynamoRevit2)\Graphical\%(RecursiveDir)" />
+    <Copy SourceFiles="@(SourcePackage)" Condition="Exists($(DynamoCore13))" DestinationFolder="$(DynamoCore13)\_Graphical\%(RecursiveDir)" />
+    <Copy SourceFiles="@(SourcePackage)" Condition="Exists($(DynamoRevit13))" DestinationFolder="$(DynamoRevit13)\_Graphical\%(RecursiveDir)" />
+    <Copy SourceFiles="@(SourcePackage)" Condition="Exists($(DynamoCore2))" DestinationFolder="$(DynamoCore2)\_Graphical\%(RecursiveDir)" />
+    <Copy SourceFiles="@(SourcePackage)" Condition="Exists($(DynamoRevit2))" DestinationFolder="$(DynamoRevit2)\_Graphical\%(RecursiveDir)" />
   </Target>
   <PropertyGroup>
     <PostBuildEvent>

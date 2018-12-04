@@ -9,7 +9,7 @@ using Dynamo.Graph.Nodes;
 using Autodesk.DesignScript.Interfaces;
 using Autodesk.DesignScript.Runtime;
 
-namespace Graphical.Core.SphereTree
+namespace GraphicalDynamo.Core.SphereTree
 {
     public class SphereNode : IGraphicItem
     {

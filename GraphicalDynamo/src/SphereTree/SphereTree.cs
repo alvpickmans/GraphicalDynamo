@@ -9,7 +9,7 @@ using Dynamo.Graph.Nodes;
 using Graphical.Extensions;
 using MeshToolkit = Autodesk.Dynamo.MeshToolkit.Mesh;
 
-namespace Graphical.Core.SphereTree
+namespace GraphicalDynamo.Core.SphereTree
 {
     public class SphereTree
     {

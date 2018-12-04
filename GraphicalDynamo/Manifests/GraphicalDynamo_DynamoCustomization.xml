@@ -10,5 +10,11 @@
     <namespace name="GraphicalDynamo.Graphs">
       <category>Graphical.Graphs</category>
     </namespace>
+	  <namespace name="GraphicalDynamo.Core.Octree">
+      <category>Graphical.WIP.Octree</category>
+    </namespace>
+	  <namespace name="GraphicalDynamo.Core.SphereTree">
+      <category>Graphical.WIP.SphereTree</category>
+    </namespace>
   </namespaces>
 </doc>
