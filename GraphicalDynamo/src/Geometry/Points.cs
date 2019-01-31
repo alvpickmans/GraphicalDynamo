@@ -10,6 +10,7 @@ using DSLine = Autodesk.DesignScript.Geometry.Line;
 using Autodesk.DesignScript.Geometry;
 using Autodesk.DesignScript.Runtime;
 using Graphical.Geometry;
+using Graphical.Extensions;
 
 namespace GraphicalDynamo.Geometry
 {
@@ -92,9 +93,9 @@ namespace GraphicalDynamo.Geometry
 
         internal static bool AreEqual(DSPoint point1, DSPoint point2)
         {
-            return gBase.Threshold(point1.X, point2.X) &&
-                gBase.Threshold(point1.Y, point2.Y) &&
-                gBase.Threshold(point1.Z, point2.Z);
+            return point1.X.AlmostEqualTo(point2.X) &&
+                point1.Y.AlmostEqualTo(point2.Y) &&
+                point1.Z.AlmostEqualTo(point2.Z);
         }
 
 

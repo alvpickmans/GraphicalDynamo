@@ -5,6 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{E0A3078A-F9D7-4CFC-AE3A-640B98963BB0}</ProjectGuid>
     <OutputType>Library</OutputType>
+    <PackageName>Graphical</PackageName>
     <NoStandardLibraries>false</NoStandardLibraries>
     <AssemblyName>GraphicalDynamo</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
@@ -196,69 +197,33 @@
       <ToDelete Include="$(ProjectDir)packages\z_$(SolutionName)\bin\**" />
     </ItemGroup>
     <Delete Files="@(ToDelete)" />
-    <Copy SourceFiles="@(Dlls)" DestinationFolder="$(ProjectDir)packages\Graphical\bin\" />
-    <Copy SourceFiles="@(Pdbs)" DestinationFolder="$(ProjectDir)packages\Graphical\bin\" />
-    <Copy SourceFiles="@(Xmls)" DestinationFolder="$(ProjectDir)packages\Graphical\bin\" />
-    <Copy SourceFiles="@(Configs)" DestinationFolder="$(ProjectDir)packages\Graphical\bin\" />
-    <Copy SourceFiles="@(JSON)" DestinationFolder="$(ProjectDir)packages\Graphical" />
-    <MakeDir Directories="$(ProjectDir)packages\Graphical\dyf" />
-    <MakeDir Directories="$(ProjectDir)packages\Graphical\extra" />
+    <Copy SourceFiles="@(Dlls)" DestinationFolder="$(SolutionDir)dist\$(PackageName)\bin\" />
+    <Copy SourceFiles="@(Pdbs)" DestinationFolder="$(SolutionDir)dist\$(PackageName)\bin\" />
+    <Copy SourceFiles="@(Xmls)" DestinationFolder="$(SolutionDir)dist\$(PackageName)\bin\" />
+    <Copy SourceFiles="@(Configs)" DestinationFolder="$(SolutionDir)dist\$(PackageName)\bin\" />
+    <Copy SourceFiles="@(JSON)" DestinationFolder="$(SolutionDir)dist\$(PackageName)" />
+    <MakeDir Directories="$(SolutionDir)dist\$(PackageName)\dyf" />
+    <MakeDir Directories="$(SolutionDir)dist\$(PackageName)\extra" />
+
+    <CallTarget Condition="'$(Configuration)' == 'Debug'" Targets="PackageDeploy"/>
   </Target>
-  <PropertyGroup>
-    <PostBuildEvent>
-      echo Configuration: "$(Configuration)"
 
+  <Target Name="PackageDeploy">
+    <ItemGroup>
+      <SourcePackage Include="$(SolutionDir)dist\$(PackageName)\**\*" />
+    </ItemGroup>
+    <PropertyGroup>
+      <DynamoVersion>2.0</DynamoVersion>
+      <!--Copy to dynamo sandbox for testing -->
+      <DynamoCore Condition="'$(Configuration)' == 'Debug'">$(AppData)\Dynamo\Dynamo Core\$(DynamoVersion)\packages\z_$(PackageName)</DynamoCore>
+      <DynamoRevit Condition="'$(Configuration)' == 'Debug'">$(AppData)\Dynamo\Dynamo Revit\$(DynamoVersion)\packages\z_$(PackageName)</DynamoRevit>
+    </PropertyGroup>
+    <Copy SourceFiles="@(SourcePackage)" DestinationFolder="$(DynamoCore)\%(RecursiveDir)" />
+    <Copy SourceFiles="@(SourcePackage)" DestinationFolder="$(DynamoRevit)\%(RecursiveDir)" />
+    <Message Importance="High" Text="+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" />
+    <Message Importance="High" Text="PACKAGE DEPLOYED TO $(DynamoCore) AND $(DynamoRevit)" />
+  </Target>
 
-
-      if "$(Configuration)" == "Debug" goto Dynamo1
-      if "$(Configuration)" == "Debug 2.x" goto Dynamo2
-
-
-
-      :Dynamo1
-
-
-      echo Copying to Dynamo Core 1.3
-
-      if not exist "%25appdata%25\Dynamo\Dynamo Core\1.3\packages\Graphical" mkdir "%25appdata%25\Dynamo\Dynamo Core\1.3\packages\Graphical"
-
-      del /s /q "%25appdata%25\Dynamo\Dynamo Core\1.3\packages\Graphical\"
-      xcopy /y /s /e "$(ProjectDir)packages\Graphical" "%25appdata%25\Dynamo\Dynamo Core\1.3\packages\Graphical"
-
-
-      echo Copying to Dynamo Revit 1.3
-
-      if not exist "%25appdata%25\Dynamo\Dynamo Revit\1.3\packages\Graphical" mkdir "%25appdata%25\Dynamo\Dynamo Revit\1.3\packages\Graphical"
-
-      del /s /q "%25appdata%25\Dynamo\Dynamo Revit\1.3\packages\Graphical\"
-      xcopy /y /s /e "$(ProjectDir)packages\Graphical" "%25appdata%25\Dynamo\Dynamo Revit\1.3\packages\Graphical"
-
-      goto exit
-
-
-      :Dynamo2
-
-
-      echo Copying to Dynamo Core 2
-
-      if not exist "%25appdata%25\Dynamo\Dynamo Core\2.0\packages\Graphical" mkdir "%25appdata%25\Dynamo\Dynamo Core\2.0\packages\Graphical"
-
-      del /s /q "%25appdata%25\Dynamo\Dynamo Core\2.0\packages\Graphical\"
-      xcopy /y /s /e "$(ProjectDir)packages\Graphical" "%25appdata%25\Dynamo\Dynamo Core\2.0\packages\Graphical"
-
-
-      echo Copying to Dynamo Revit 2
-
-      if not exist "%25appdata%25\Dynamo\Dynamo Revit\2.0\packages\Graphical" mkdir "%25appdata%25\Dynamo\Dynamo Revit\2.0\packages\Graphical"
-
-      del /s /q "%25appdata%25\Dynamo\Dynamo Revit\2.0\packages\Graphical\"
-      xcopy /y /s /e "$(ProjectDir)packages\Graphical" "%25appdata%25\Dynamo\Dynamo Revit\2.0\packages\Graphical"
-
-      goto exit
-
-      :exit
-    </PostBuildEvent>
-  </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio AllowExistingFolder="true" />
   </ProjectExtensions>
