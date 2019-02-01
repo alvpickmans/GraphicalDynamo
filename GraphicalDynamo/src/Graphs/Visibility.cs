@@ -10,6 +10,7 @@ using Autodesk.DesignScript.Interfaces;
 using Autodesk.DesignScript.Runtime;
 using System.Globalization;
 using Graphical.Geometry;
+using Graphical.Extensions;
 using Graphical.Graphs;
 using Dynamo.Graph.Nodes;
 using GraphicalDynamo.Geometry;
@@ -209,7 +210,7 @@ namespace GraphicalDynamo.Graphs
                 }
                 else
                 {
-                    int index = List.BisectIndex(colorRange.Keys.ToList(), factor);
+                    int index = colorRange.Keys.ToList().BisectIndex(factor);
                         
                     color = DSCore.Color.Lerp(rangeColors[index - 1], rangeColors[index], Factors[i]);
                 }

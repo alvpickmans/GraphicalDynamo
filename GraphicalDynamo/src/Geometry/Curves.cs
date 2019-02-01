@@ -9,6 +9,7 @@ using DSPoint = Autodesk.DesignScript.Geometry.Point;
 using Autodesk.DesignScript.Geometry;
 using Autodesk.DesignScript.Runtime;
 using Graphical.Geometry;
+using Graphical.Extensions;
 using GraphicalDynamo.Graphs;
 
 namespace GraphicalDynamo.Geometry
@@ -235,7 +236,7 @@ namespace GraphicalDynamo.Geometry
             //TODO : Look into http://www.antigrain.com/research/adaptive_bezier/index.html
             if (curve == null) { throw new ArgumentNullException("curve"); }
             List<DSCurve> lines = new List<DSCurve>();
-            bool isStraight = gBase.Threshold(curve.Length, curve.StartPoint.DistanceTo(curve.EndPoint));
+            bool isStraight = curve.Length.AlmostEqualTo(curve.StartPoint.DistanceTo(curve.EndPoint));
             if (isStraight)
             {
                 lines.Add(curve);
