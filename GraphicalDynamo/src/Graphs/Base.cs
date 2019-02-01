@@ -166,19 +166,17 @@ namespace GraphicalDynamo.Graphs
             List<DSPoint> points = vertices.Select(v => Points.ToPoint(v)).ToList();
             Surface isovist;
             // TODO: Implement better way of checking if polygon is self intersectingç
-            try
-            {
-                var polygon = Polygon.ByPoints(points);
-                isovist = Surface.ByPatch(polygon);
-            }
-            catch
+            
+            Polygon polygon = Polygon.ByPoints(points);
+
+            if(polygon.SelfIntersections().Length > 0)
             {
                 points.Add(point);
-                var polygon = Polygon.ByPoints(points);
-                isovist = Surface.ByPatch(polygon);
+                polygon = Polygon.ByPoints(points);
+
             }
 
-            return isovist;
+            return Surface.ByPatch(polygon);
         }
 
         #endregion

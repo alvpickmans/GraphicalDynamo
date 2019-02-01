@@ -171,6 +171,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\Geometry\Curves.cs" />
     <Compile Include="src\Geometry\Points.cs" />
+    <Compile Include="src\Geometry\Polygons.cs" />
     <Compile Include="src\Graphs\Visibility.cs" />
     <Compile Include="src\Graphs\Base.cs" />
   </ItemGroup>
