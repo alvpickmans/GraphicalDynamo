@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DSPoint = Autodesk.DesignScript.Geometry.Point;
-using Autodesk.DesignScript.Geometry;
+using DS = Autodesk.DesignScript.Geometry;
 using Autodesk.DesignScript.Interfaces;
 using Autodesk.DesignScript.Runtime;
 using System.Globalization;
@@ -14,7 +13,6 @@ using Graphical.Extensions;
 using Graphical.Graphs;
 using Dynamo.Graph.Nodes;
 using GraphicalDynamo.Geometry;
-using Graphical.Core;
 using System.Drawing;
 #endregion
 
@@ -56,7 +54,7 @@ namespace GraphicalDynamo.Graphs
         public static VisibilityGraph ByBaseGraph(BaseGraph baseGraph, bool reduced = true)
         {
             if(baseGraph == null) { throw new ArgumentNullException("graph"); }
-            var visGraph = new Graphical.Graphs.VisibilityGraph(baseGraph.graph, reduced, true);
+            var visGraph = Graphical.Graphs.VisibilityGraph.ByBaseGraph(baseGraph.graph, reduced, true);
 
             var visibilityGraph = new VisibilityGraph()
             {
@@ -80,7 +78,7 @@ namespace GraphicalDynamo.Graphs
         /// <param name="lines">Connecting lines</param>
         /// <returns name="visGraph">Connected VisibilityGraph</returns>
         [NodeCategory("Actions")]
-        public static VisibilityGraph ConnectGraphs(List<VisibilityGraph> visibilityGraphs, List<Line> lines)
+        public static VisibilityGraph ConnectGraphs(List<VisibilityGraph> visibilityGraphs, List<DS.Line> lines)
         {
             if(visibilityGraphs == null) { throw new ArgumentNullException("visibilityGraphs"); }
 
@@ -105,14 +103,14 @@ namespace GraphicalDynamo.Graphs
         /// <returns name="graph">Graph representing the shortest path</returns>
         /// <returns name="length">Length of path</returns>
         [MultiReturn(new[] { "graph", "length" })]
-        public static Dictionary<string, object> ShortestPath(VisibilityGraph visGraph, DSPoint origin, DSPoint destination)
+        public static Dictionary<string, object> ShortestPath(VisibilityGraph visGraph, DS.Point origin, DS.Point destination)
         {
             if (visGraph == null) { throw new ArgumentNullException("visGraph"); }
             if (origin == null) { throw new ArgumentNullException("origin"); }
             if (destination == null) { throw new ArgumentNullException("destination"); }
 
-            gVertex gOrigin = gVertex.ByCoordinates(origin.X, origin.Y, origin.Z);
-            gVertex gDestination = gVertex.ByCoordinates(destination.X, destination.Y, destination.Z);
+            Vertex gOrigin = Vertex.ByCoordinates(origin.X, origin.Y, origin.Z);
+            Vertex gDestination = Vertex.ByCoordinates(destination.X, destination.Y, destination.Z);
 
             Graphical.Graphs.VisibilityGraph visibilityGraph = visGraph.graph as Graphical.Graphs.VisibilityGraph;
 
@@ -124,7 +122,7 @@ namespace GraphicalDynamo.Graphs
             return new Dictionary<string, object>()
             {
                 {"graph", baseGraph },
-                {"length", baseGraph.graph.edges.Select(e => e.Length).Sum() }
+                {"length", baseGraph.graph.Edges.Select(e => e.Length).Sum() }
             };
         }
 
@@ -187,16 +185,16 @@ namespace GraphicalDynamo.Graphs
         public void TessellateVisibilityGraph(IRenderPackage package, TessellationParameters parameters)
         {
             
-            //foreach(gVertex v in graph.vertices)
+            //foreach(Vertex v in graph.vertices)
             //{
             //    AddColouredVertex(package, v, vertexDefaultColour);
             //}
 
             package.RequiresPerVertexColoration = true;
             var rangeColors = colorRange.Values.ToList();
-            for (var i = 0; i < base.graph.edges.Count; i++)
+            for (var i = 0; i < base.graph.Edges.Count; i++)
             {
-                var e = base.graph.edges[i];
+                var e = base.graph.Edges[i];
                 var factor = Factors[i];
                 DSCore.Color color;
 

@@ -4,9 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
-using DSCurve = Autodesk.DesignScript.Geometry.Curve;
-using DSPoint = Autodesk.DesignScript.Geometry.Point;
-using Autodesk.DesignScript.Geometry;
+using DS = Autodesk.DesignScript.Geometry;
 using Autodesk.DesignScript.Runtime;
 using Graphical.Geometry;
 using Graphical.Extensions;
@@ -22,28 +20,32 @@ namespace GraphicalDynamo.Geometry
     {
         #region Internal Methods
 
-        internal static gEdge ToEdge(this Line line)
+        internal static Edge ToEdge(this DS.Line line)
         {
-            return gEdge.ByStartVertexEndVertex(line.StartPoint.ToVertex(), line.EndPoint.ToVertex());
+            return Edge.ByStartVertexEndVertex(line.StartPoint.ToVertex(), line.EndPoint.ToVertex());
         }
 
-        internal static Dictionary<gVertex,List<DSCurve>> CurvesDependency(List<DSCurve> curves)
-        {
-            Dictionary<gVertex, List<DSCurve>> graph = new Dictionary<gVertex, List<DSCurve>>();
+        internal static DS.Line ToLine(this Edge edge){
+            return DS.Line.ByStartPointEndPoint(edge.StartVertex.ToPoint(), edge.EndVertex.ToPoint());
+        }
 
-            foreach (DSCurve curve in curves)
+        internal static Dictionary<Vertex,List<DS.Curve>> CurvesDependency(List<DS.Curve> curves)
+        {
+            Dictionary<Vertex, List<DS.Curve>> graph = new Dictionary<Vertex, List<DS.Curve>>();
+
+            foreach (DS.Curve curve in curves)
             {
-                gVertex start = Points.ToVertex(curve.StartPoint);
-                gVertex end = Points.ToVertex(curve.EndPoint);
-                List<DSCurve> startList = new List<DSCurve>();
-                List<DSCurve> endList = new List<DSCurve>();
+                Vertex start = Points.ToVertex(curve.StartPoint);
+                Vertex end = Points.ToVertex(curve.EndPoint);
+                List<DS.Curve> startList = new List<DS.Curve>();
+                List<DS.Curve> endList = new List<DS.Curve>();
                 if (graph.TryGetValue(start, out startList))
                 {
                     startList.Add(curve);
                 }
                 else
                 {
-                    graph.Add(start, new List<DSCurve>() { curve });
+                    graph.Add(start, new List<DS.Curve>() { curve });
                 }
 
                 if (graph.TryGetValue(end, out endList))
@@ -52,25 +54,25 @@ namespace GraphicalDynamo.Geometry
                 }
                 else
                 {
-                    graph.Add(end, new List<DSCurve>() { curve });
+                    graph.Add(end, new List<DS.Curve>() { curve });
                 }
             }
             return graph;
         }
 
-        internal static bool PolygonContainsPoint(Polygon polygon, DSPoint point)
+        internal static bool PolygonContainsPoint(DS.Polygon polygon, DS.Point point)
         {
-            gVertex vertex = Points.ToVertex(point);
+            Vertex vertex = Points.ToVertex(point);
             var vertices = polygon.Points.Select(p => Points.ToVertex(p)).ToList();
-            gPolygon gPolygon = gPolygon.ByVertices(vertices, false);
+            Polygon Polygon = Polygon.ByVertices(vertices, false);
 
-            return gPolygon.ContainsVertex(vertex);
+            return Polygon.ContainsVertex(vertex);
         }
 
-        internal static bool DoesIntersect(Line line1, Line line2)
+        internal static bool DoesIntersect(DS.Line line1, DS.Line line2)
         {
-            gEdge edge1 = gEdge.ByStartVertexEndVertex(Points.ToVertex(line1.StartPoint), Points.ToVertex(line1.EndPoint));
-            gEdge edge2 = gEdge.ByStartVertexEndVertex(Points.ToVertex(line2.StartPoint), Points.ToVertex(line2.EndPoint));
+            Edge edge1 = Edge.ByStartVertexEndVertex(Points.ToVertex(line1.StartPoint), Points.ToVertex(line1.EndPoint));
+            Edge edge2 = Edge.ByStartVertexEndVertex(Points.ToVertex(line2.StartPoint), Points.ToVertex(line2.EndPoint));
 
             if (edge1.Intersects(edge2))
             {
@@ -84,10 +86,10 @@ namespace GraphicalDynamo.Geometry
             }
         }
 
-        internal static bool DoesIntersect(Line line, DSPoint point)
+        internal static bool DoesIntersect(DS.Line line, DS.Point point)
         {
-            gEdge edge = gEdge.ByStartVertexEndVertex(Points.ToVertex(line.StartPoint), Points.ToVertex(line.EndPoint));
-            gVertex vertex = Points.ToVertex(point);
+            Edge edge = Edge.ByStartVertexEndVertex(Points.ToVertex(line.StartPoint), Points.ToVertex(line.EndPoint));
+            Vertex vertex = Points.ToVertex(point);
 
             return vertex.OnEdge(edge);
         }
@@ -104,7 +106,7 @@ namespace GraphicalDynamo.Geometry
         /// <returns name="polygons">Polygons created from connected lines</returns>
         /// <returns name="ungrouped">Lines not forming a closed polygon</returns>
         [MultiReturn(new[] { "polygons", "ungrouped" })]
-        public static Dictionary<string, object> BuildPolygons(List<Line> lines)
+        public static Dictionary<string, object> BuildPolygons(List<DS.Line> lines)
         {
             if (lines == null) { throw new ArgumentNullException("lines"); }
             if (lines.Count < 2) { throw new ArgumentException("Needs 2 or more lines", "lines"); }
@@ -112,31 +114,31 @@ namespace GraphicalDynamo.Geometry
             BaseGraph g = BaseGraph.ByLines(lines);
             g.graph.BuildPolygons();
 
-            var gPolygons = g.graph.Polygons;
-            List<Polygon> dsPolygons = new List<Polygon>();
-            List<Line> dsLines = new List<Line>();
-            List<gEdge> polygonEdges = new List<gEdge>();
-            foreach (gPolygon gP in gPolygons)
+            var Polygons = g.graph.Polygons;
+            List<DS.Polygon> dsPolygons = new List<DS.Polygon>();
+            List<DS.Line> dsLines = new List<DS.Line>();
+            List<Edge> polygonEdges = new List<Edge>();
+            foreach (Polygon gP in Polygons)
             {
-                var points = gP.Vertices.Select(v => DSPoint.ByCoordinates(v.X, v.Y, v.Z)).ToList();
+                var points = gP.Vertices.Select(v => DS.Point.ByCoordinates(v.X, v.Y, v.Z)).ToList();
                 if (gP.IsClosed)
                 {
-                    dsPolygons.Add(Polygon.ByPoints(points));
+                    dsPolygons.Add(DS.Polygon.ByPoints(points));
                 }
                 else if (gP.Edges.Count > 1)
                 {
-                    foreach(gEdge edge in gP.Edges)
+                    foreach(Edge edge in gP.Edges)
                     {
-                        DSPoint start = Points.ToPoint(edge.StartVertex);
-                        DSPoint end = Points.ToPoint(edge.EndVertex);
-                        dsLines.Add(Line.ByStartPointEndPoint(start, end));
+                        DS.Point start = Points.ToPoint(edge.StartVertex);
+                        DS.Point end = Points.ToPoint(edge.EndVertex);
+                        dsLines.Add(DS.Line.ByStartPointEndPoint(start, end));
                     }
                 }
                 else
                 {
-                    DSPoint start = Points.ToPoint(gP.Edges.First().StartVertex);
-                    DSPoint end = Points.ToPoint(gP.Edges.First().EndVertex);
-                    dsLines.Add(Line.ByStartPointEndPoint(start, end));
+                    DS.Point start = Points.ToPoint(gP.Edges.First().StartVertex);
+                    DS.Point end = Points.ToPoint(gP.Edges.First().EndVertex);
+                    dsLines.Add(DS.Line.ByStartPointEndPoint(start, end));
                 }
             }
 
@@ -154,16 +156,16 @@ namespace GraphicalDynamo.Geometry
         /// <returns name="polycurves">Polycurves grouped</returns>
         /// <returns name="ungrouped">Lines not grouped</returns>
         [MultiReturn(new[] { "polycurves", "ungrouped" })]
-        public static Dictionary<string, object> GroupCurves(List<DSCurve> curves)
+        public static Dictionary<string, object> GroupCurves(List<DS.Curve> curves)
         {
             if(curves == null) { throw new ArgumentNullException("lines"); }
             if(curves.Count < 2) { throw new ArgumentException("Needs 2 or more lines", "lines"); }
 
-            Dictionary<gVertex, List<DSCurve>> graph = CurvesDependency(curves);
-            Dictionary<int, List<DSCurve>> grouped = new Dictionary<int, List<DSCurve>>();
-            Dictionary<gVertex, int> vertices = new Dictionary<gVertex, int>();
+            Dictionary<Vertex, List<DS.Curve>> graph = CurvesDependency(curves);
+            Dictionary<int, List<DS.Curve>> grouped = new Dictionary<int, List<DS.Curve>>();
+            Dictionary<Vertex, int> vertices = new Dictionary<Vertex, int>();
 
-            foreach(gVertex v in graph.Keys)
+            foreach(Vertex v in graph.Keys)
             {
 
                 // If already belongs to a polygon or is not a polygon vertex or already computed
@@ -171,14 +173,14 @@ namespace GraphicalDynamo.Geometry
 
                 // grouped.Count() translates to the number of different groups created
                 vertices.Add(v, grouped.Count());
-                grouped.Add(vertices[v], new List<DSCurve>());
+                grouped.Add(vertices[v], new List<DS.Curve>());
 
-                foreach(DSCurve curve in graph[v])
+                foreach(DS.Curve curve in graph[v])
                 {
                     var startVertex = Points.ToVertex(curve.StartPoint);
                     var endVertex = Points.ToVertex(curve.EndPoint);
-                    DSCurve nextCurve = curve;
-                    gVertex nextVertex = (startVertex.Equals(v)) ? endVertex : startVertex;
+                    DS.Curve nextCurve = curve;
+                    Vertex nextVertex = (startVertex.Equals(v)) ? endVertex : startVertex;
                 
                     while(!vertices.ContainsKey(nextVertex))
                     {
@@ -203,13 +205,13 @@ namespace GraphicalDynamo.Geometry
 
             }
             
-            List<PolyCurve> polyCurves = new List<PolyCurve>();
-            List<DSCurve> ungrouped = new List<DSCurve>();
+            List<DS.PolyCurve> polyCurves = new List<DS.PolyCurve>();
+            List<DS.Curve> ungrouped = new List<DS.Curve>();
             foreach(var group in grouped.Values)
             {
                 if(group.Count > 1)
                 {
-                    polyCurves.Add(PolyCurve.ByJoinedCurves(group));
+                    polyCurves.Add(DS.PolyCurve.ByJoinedCurves(group));
                 }
                 else
                 {
@@ -231,11 +233,11 @@ namespace GraphicalDynamo.Geometry
         /// <param name="maxLength">Maximum length of subdivisions</param>
         /// <param name="asPolycurve">If true returns a Polycurve or a list of lines otherwise.</param>
         /// <returns></returns>
-        public static object Polygonize(DSCurve curve, double maxLength, bool asPolycurve = false)
+        public static object Polygonize(DS.Curve curve, double maxLength, bool asPolycurve = false)
         {
             //TODO : Look into http://www.antigrain.com/research/adaptive_bezier/index.html
             if (curve == null) { throw new ArgumentNullException("curve"); }
-            List<DSCurve> lines = new List<DSCurve>();
+            List<DS.Curve> lines = new List<DS.Curve>();
             bool isStraight = curve.Length.AlmostEqualTo(curve.StartPoint.DistanceTo(curve.EndPoint));
             if (isStraight)
             {
@@ -247,22 +249,22 @@ namespace GraphicalDynamo.Geometry
                 if(divisions > 1)
                 {
                     var points = curve.PointsAtEqualSegmentLength(divisions);
-                    lines.Add(Line.ByStartPointEndPoint(curve.StartPoint, points.First()));
+                    lines.Add(DS.Line.ByStartPointEndPoint(curve.StartPoint, points.First()));
                     for (var i = 0; i < points.Count() - 1; i++)
                     {
-                        lines.Add(Line.ByStartPointEndPoint(points[i], points[i + 1]));
+                        lines.Add(DS.Line.ByStartPointEndPoint(points[i], points[i + 1]));
                     }
-                    lines.Add(Line.ByStartPointEndPoint(points.Last(), curve.EndPoint));
+                    lines.Add(DS.Line.ByStartPointEndPoint(points.Last(), curve.EndPoint));
                 }
                 else
                 {
-                    lines.Add(Line.ByStartPointEndPoint(curve.StartPoint, curve.EndPoint));
+                    lines.Add(DS.Line.ByStartPointEndPoint(curve.StartPoint, curve.EndPoint));
                 }
             }
 
             if (asPolycurve)
             {
-                return PolyCurve.ByJoinedCurves(lines);
+                return DS.PolyCurve.ByJoinedCurves(lines);
             }
             else
             {

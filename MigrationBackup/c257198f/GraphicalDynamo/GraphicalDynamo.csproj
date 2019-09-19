@@ -1,0 +1,230 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E0A3078A-F9D7-4CFC-AE3A-640B98963BB0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <PackageName>Graphical</PackageName>
+    <NoStandardLibraries>false</NoStandardLibraries>
+    <AssemblyName>GraphicalDynamo</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\Debug\GraphicalDynamo.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>GraphicalDynamo</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug 2.x|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug 2.x\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>bin\Debug 2.x\GraphicalDynamo.xml</DocumentationFile>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Analysis, Version=2.0.2.6986, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamoVisualProgramming.DynamoCoreNodes.2.0.2.6986\lib\net45\Analysis.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="CoreNodeModels, Version=2.0.2.6986, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamoVisualProgramming.WpfUILibrary.2.0.2.6986\lib\net45\CoreNodeModels.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="CoreNodeModelsWpf, Version=2.0.2.6986, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamoVisualProgramming.WpfUILibrary.2.0.2.6986\lib\net45\CoreNodeModelsWpf.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DesignScriptBuiltin, Version=2.0.2.6986, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamoVisualProgramming.Core.2.0.2.6986\lib\net45\DesignScriptBuiltin.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DSCoreNodes, Version=2.0.2.6986, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamoVisualProgramming.DynamoCoreNodes.2.0.2.6986\lib\net45\DSCoreNodes.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DSIronPython, Version=2.0.2.6986, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamoVisualProgramming.Core.2.0.2.6986\lib\net45\DSIronPython.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DynamoApplications, Version=2.0.2.6986, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamoVisualProgramming.Core.2.0.2.6986\lib\net45\DynamoApplications.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DynamoCore, Version=2.0.2.6986, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamoVisualProgramming.Core.2.0.2.6986\lib\net45\DynamoCore.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DynamoCoreWpf, Version=2.0.2.6986, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamoVisualProgramming.WpfUILibrary.2.0.2.6986\lib\net45\DynamoCoreWpf.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DynamoInstallDetective, Version=2.0.2.6986, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamoVisualProgramming.Core.2.0.2.6986\lib\net45\DynamoInstallDetective.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DynamoServices, Version=2.0.2.6986, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamoVisualProgramming.DynamoServices.2.0.2.6986\lib\net45\DynamoServices.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DynamoShapeManager, Version=2.0.2.6986, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamoVisualProgramming.Core.2.0.2.6986\lib\net45\DynamoShapeManager.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DynamoUnits, Version=2.0.2.6986, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamoVisualProgramming.ZeroTouchLibrary.2.0.2.6986\lib\net45\DynamoUnits.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DynamoUtilities, Version=2.0.2.6986, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamoVisualProgramming.Core.2.0.2.6986\lib\net45\DynamoUtilities.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="GeometryColor, Version=2.0.2.6986, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamoVisualProgramming.DynamoCoreNodes.2.0.2.6986\lib\net45\GeometryColor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Prism.4.1.0.0\lib\NET40\Microsoft.Expression.Interactions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Prism.4.1.0.0\lib\NET40\Microsoft.Practices.Prism.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism.Interactivity, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Prism.4.1.0.0\lib\NET40\Microsoft.Practices.Prism.Interactivity.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.6.3.13283, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="ProtoCore, Version=2.0.2.6986, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamoVisualProgramming.Core.2.0.2.6986\lib\net45\ProtoCore.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ProtoGeometry, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamoVisualProgramming.ZeroTouchLibrary.2.0.2.6986\lib\net45\ProtoGeometry.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Prism.4.1.0.0\lib\NET40\System.Windows.Interactivity.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="VMDataBridge, Version=2.0.2.6986, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamoVisualProgramming.Core.2.0.2.6986\lib\net45\VMDataBridge.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Manifests\pkg.json" />
+    <None Include="packages.config" />
+    <None Include="packages\Graphical\pkg.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Manifests\GraphicalDynamo_DynamoCustomization.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\Geometry\Curves.cs" />
+    <Compile Include="src\Geometry\Points.cs" />
+    <Compile Include="src\Geometry\Polygons.cs" />
+    <Compile Include="src\Graphs\ConvexGraph.cs" />
+    <Compile Include="src\Graphs\Visibility.cs" />
+    <Compile Include="src\Graphs\Base.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="packages\Graphical\bin\" />
+    <Folder Include="packages\Graphical\dyf\" />
+    <Folder Include="packages\Graphical\extra\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Graphical\Graphical\Graphical.csproj">
+      <Project>{428c4b56-65ea-4ad0-8b77-fca52448520a}</Project>
+      <Name>Graphical</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
+  <Target Name="AfterBuild">
+    <ItemGroup>
+      <Dlls Include="$(OutDir)*.dll" />
+      <Pdbs Include="$(OutDir)*.pdb" />
+      <Xmls Include="$(OutDir)*.xml" />
+      <Xmls Include="$(ProjectDir)Manifests\*.xml" />
+      <JSON Include="$(ProjectDir)Manifests\*.json" />
+      <Configs Include="$(OutDir)*.config" />
+      <Configs Include="$(ProjectDir)Manifests\*.config" />
+      <ToDelete Include="$(ProjectDir)packages\z_$(SolutionName)\bin\**" />
+    </ItemGroup>
+    <Delete Files="@(ToDelete)" />
+    <Copy SourceFiles="@(Dlls)" DestinationFolder="$(SolutionDir)dist\$(PackageName)\bin\" />
+    <Copy SourceFiles="@(Pdbs)" DestinationFolder="$(SolutionDir)dist\$(PackageName)\bin\" />
+    <Copy SourceFiles="@(Xmls)" DestinationFolder="$(SolutionDir)dist\$(PackageName)\bin\" />
+    <Copy SourceFiles="@(Configs)" DestinationFolder="$(SolutionDir)dist\$(PackageName)\bin\" />
+    <Copy SourceFiles="@(JSON)" DestinationFolder="$(SolutionDir)dist\$(PackageName)" />
+    <MakeDir Directories="$(SolutionDir)dist\$(PackageName)\dyf" />
+    <MakeDir Directories="$(SolutionDir)dist\$(PackageName)\extra" />
+    <CallTarget Condition="'$(Configuration)' == 'Debug'" Targets="PackageDeploy" />
+  </Target>
+  <Target Name="PackageDeploy">
+    <ItemGroup>
+      <SourcePackage Include="$(SolutionDir)dist\$(PackageName)\**\*" />
+    </ItemGroup>
+    <PropertyGroup>
+      <DynamoVersion>2.0</DynamoVersion>
+      <!--Copy to dynamo sandbox for testing -->
+      <DynamoCore Condition="'$(Configuration)' == 'Debug'">$(AppData)\Dynamo\Dynamo Core\$(DynamoVersion)\packages\z_$(PackageName)</DynamoCore>
+      <DynamoRevit Condition="'$(Configuration)' == 'Debug'">$(AppData)\Dynamo\Dynamo Revit\$(DynamoVersion)\packages\z_$(PackageName)</DynamoRevit>
+    </PropertyGroup>
+    <Copy SourceFiles="@(SourcePackage)" DestinationFolder="$(DynamoCore)\%(RecursiveDir)" />
+    <Copy SourceFiles="@(SourcePackage)" DestinationFolder="$(DynamoRevit)\%(RecursiveDir)" />
+    <Message Importance="High" Text="+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" />
+    <Message Importance="High" Text="PACKAGE DEPLOYED TO $(DynamoCore) AND $(DynamoRevit)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio AllowExistingFolder="true" />
+  </ProjectExtensions>
+</Project>
